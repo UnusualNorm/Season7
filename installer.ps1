@@ -36,8 +36,8 @@ function Update-UrlWithParameter {
     $query = [System.Web.HttpUtility]::ParseQueryString($baseUri.Query)
 
     # Check if the parameter already exists, and update or append accordingly
-    if ($query.HasKeys() -and $query.ContainsKey($parameterName)) {
-        $query[$parameterName] = $parameterValue
+    if ($query.Get($parameterName) -ne $null) {
+        $query.Set($parameterName, $parameterValue)
     } else {
         $query.Add($parameterName, $parameterValue)
     }
