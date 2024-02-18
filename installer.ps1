@@ -43,7 +43,8 @@ function Update-UrlWithParameter {
     }
 
     # Rebuild the URL with the updated parameters, forcefully include the port
-    $updatedUrl = $baseUri.GetLeftPart([System.UriPartial]::SchemeAndServer) + $baseUri.AbsolutePath + "?" + $query.ToString()
+    # To make life easier, assume ws://
+    $updatedUrl = "ws://$($baseUri.Host):$($baseUri.Port)$($baseUri.AbsolutePath)?$($query.ToString())"
 
     return $updatedUrl
 }
