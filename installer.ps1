@@ -42,9 +42,8 @@ function Update-UrlWithParameter {
         $query.Add($parameterName, $parameterValue)
     }
 
-    # Rebuild the URL with the updated parameters, include the port if it exists
-    # $updatedUrl = $baseUri.GetLeftPart([System.UriPartial]::Path) + '?' + $query.ToString()
-    $updatedUrl = $baseUri.GetLeftPart([System.UriPartial]::Authority) + $baseUri.AbsolutePath + '?' + $query.ToString()
+    # Rebuild the URL with the updated parameters, forcefully include the port
+    $updatedUrl = $baseUri.GetLeftPart([System.UriPartial]::SchemeAndServer) + $baseUri.AbsolutePath + "?" + $query.ToString()
 
     return $updatedUrl
 }
