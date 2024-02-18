@@ -36,14 +36,15 @@ function Update-UrlWithParameter {
     $query = [System.Web.HttpUtility]::ParseQueryString($baseUri.Query)
 
     # Check if the parameter already exists, and update or append accordingly
-    if ($query.Get($parameterName) -ne $null) {
+    if ($null -ne $query.Get($parameterName)) {
         $query.Set($parameterName, $parameterValue)
     } else {
         $query.Add($parameterName, $parameterValue)
     }
 
-    # Rebuild the URL with the updated parameters
-    $updatedUrl = $baseUri.GetLeftPart([System.UriPartial]::Path) + '?' + $query.ToString()
+    # Rebuild the URL with the updated parameters, include the port if it exists
+    # $updatedUrl = $baseUri.GetLeftPart([System.UriPartial]::Path) + '?' + $query.ToString()
+    $updatedUrl = $baseUri.GetLeftPart([System.UriPartial]::Authority) + $baseUri.AbsolutePath + '?' + $query.ToString()
 
     return $updatedUrl
 }
