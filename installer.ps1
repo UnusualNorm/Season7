@@ -71,17 +71,15 @@ while (Get-Process -Name "echovr" -ErrorAction SilentlyContinue) {
 }
 
 Write-Host "Checking for conflicts..."
-if (Test-Path "plugins") {
-    Write-Host "Found existing plugins folder. Deleting..."
-    Remove-Item -Recurse -Force "plugins"
-}
 if (Test-Path "dbgcore.dll") {
     Write-Host "Found existing dbgcore.dll. Deleting..."
     Remove-Item -Force "dbgcore.dll"
 }
 
 Write-Host "Creating plugins folder..."
-New-Item -ItemType Directory -Path "plugins"
+if (-not (Test-Path "plugins")) {
+    New-Item -ItemType Directory -Path "plugins"
+}
 
 Write-Host "Downloading EchoLoader..."
 $echoLoaderUrl = "https://github.com/EchoTools/EchoLoader/releases/latest/download/EchoLoader.dll"
@@ -106,3 +104,6 @@ $config | ConvertTo-Json | Set-Content $configPath
 
 Write-Host "Starting game..."
 Start-Process "echovr.exe"
+
+Write-Host "Installation complete."
+Read-Host "Press enter to exit"
