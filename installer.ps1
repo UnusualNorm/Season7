@@ -86,7 +86,7 @@ $echoLoaderUrl = "https://github.com/EchoTools/EchoLoader/releases/latest/downlo
 Invoke-WebRequest -Uri $echoLoaderUrl -OutFile "dbgcore.dll"
 
 Write-Host "Downloading SymbolPatch..."
-$symbolPatchUrl = "https://github.com/UnusualNorm/SymbolPatch/releases/latest/download/SymbolPatch.dll"
+$symbolPatchUrl = "https://github.com/EchoTools/SymbolPatch/releases/latest/download/SymbolPatch.dll"
 Invoke-WebRequest -Uri $symbolPatchUrl -OutFile "plugins/SymbolPatch.dll"
 
 Write-Host "Checking config..."
