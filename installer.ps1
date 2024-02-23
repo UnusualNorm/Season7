@@ -1,29 +1,3 @@
-function WaitForInput {
-    $timeout = 15
-    $startTime = Get-Date
-
-    while ($true) {
-        $elapsedTime = (Get-Date) - $startTime
-
-        if ($elapsedTime.TotalSeconds -ge $timeout) {
-            # If 15 seconds have passed, assume 'y'
-            return 'y'
-        }
-
-        if ([System.Console]::KeyAvailable) {
-            $key = [System.Console]::ReadKey($true).Key
-
-            if ($key -eq 'Y') {
-                return 'y'
-            } elseif ($key -eq 'N') {
-                return 'n'
-            }
-        }
-
-        Start-Sleep -Milliseconds 100
-    }
-}
-
 function Update-UrlWithParameter {
     param (
         [string]$url,
@@ -31,30 +5,24 @@ function Update-UrlWithParameter {
         [string]$parameterValue
     )
 
-    # Parse the URL to separate the base URL and existing parameters
     $baseUri = [System.Uri]$url
     $query = [System.Web.HttpUtility]::ParseQueryString($baseUri.Query)
 
-    # Check if the parameter already exists, and update or append accordingly
     if ($null -ne $query.Get($parameterName)) {
         $query.Set($parameterName, $parameterValue)
     } else {
         $query.Add($parameterName, $parameterValue)
     }
-
-    # Rebuild the URL with the updated parameters, forcefully include the port
-    # To make life easier, assume ws://
+    
     $updatedUrl = "ws://$($baseUri.Host):$($baseUri.Port)$($baseUri.AbsolutePath)?$($query.ToString())"
-
     return $updatedUrl
 }
 
-Write-Host "Are you sure you want to install? Installing in 15 seconds... (y/n)"
-$shouldInstall = WaitForInput
-
-if ($shouldInstall -eq 'n') {
+Write-Host "Are you sure you want to install? (y/n)"
+$confirmation = Read-Host
+if ($confirmation -ne "y") {
     Write-Host "Installation cancelled."
-    Read-Host
+    Read-Host "Press enter to exit"
     exit
 }
 
@@ -66,8 +34,8 @@ if (-not (Test-Path "echovr.exe")) {
 }
 
 Write-Host "Stopping game..."
-Stop-Process -Name "echovr"
 while (Get-Process -Name "echovr" -ErrorAction SilentlyContinue) {
+    Stop-Process -Name "echovr"
     Start-Sleep -Seconds 1
 }
 
